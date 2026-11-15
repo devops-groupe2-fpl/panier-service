@@ -1,5 +1,6 @@
 const express = require('express');
 const catalogue = require('../catalogueClient');
+const commandes = require('../commandesClient');
 
 const router = express.Router();
 const carts = new Map(); // userId -> Map(productId -> item)
@@ -59,6 +60,24 @@ router.delete('/:userId/remove/:productId', (req, res) => {
     return res.status(404).json({ error: `Produit ${productId} absent du panier` });
   }
   res.json(formatCart(userId));
+});
+
+// Valider le panier : envoyer à Commandes, puis vider le panier
+router.post('/:userId/checkout', async (req, res) => {
+  const { userId } = req.params;
+  const cart = formatCart(userId);
+
+  if (cart.items.length === 0) {
+    return res.status(400).json({ error: 'Le panier est vide' });
+  }
+
+  try {
+    const order = await commandes.createOrder(cart);
+    carts.delete(userId);
+    res.status(201).json(order);
+  } catch (err) {
+    res.status(502).json({ error: 'Service Commandes indisponible' });
+  }
 });
 
 module.exports = { router, resetCarts: () => carts.clear() };

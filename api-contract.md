@@ -1,6 +1,6 @@
 # Contrat d'API — Panier ↔ Commandes (Groupe 2)
 
-Statut : **brouillon à valider par Zineb (Panier) et Hasna (Commandes)**
+Statut : **validé par Zineb (Panier) et Hasna (Commandes) le 15/11/2026**
 
 ## Conventions
 - Toutes les requêtes et réponses sont en JSON.
@@ -40,7 +40,7 @@ Si le produit est déjà dans le panier, sa quantité augmente de `quantity`.
 - 200 : le panier mis à jour
 - 404 : produit absent du panier
 
-### POST /cart/:userId/checkout  (à implémenter après validation)
+### POST /cart/:userId/checkout
 Envoie le panier au service Commandes puis vide le panier.
 - 201 : `{ "orderId": 12, "status": "pending", "createdAt": "2026-11-15T12:00:00Z" }`
 - 400 : panier vide
